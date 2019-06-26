@@ -5,3 +5,14 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+user = User.find_or_initialize_by(email: 'admin@ilabsea.org')
+user.password = 'password'
+user.password_confirmation = 'password'
+user.role='admin'
+user.save
+
+user = User.find_or_initialize_by(email: 'super@ilabsea.org')
+user.password = 'password'
+user.password_confirmation = 'password'
+user.role='super_admin'
+user.save
