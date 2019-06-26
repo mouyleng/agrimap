@@ -1,24 +1,37 @@
 FROM ruby:2.6.3
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
-# https://github.com/nodesource/distributions#installation-instructions
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
-        && apt-get install -y nodejs
+LABEL maintainer="Kakada Chheang <kakada@instedd.org>"
 
-RUN mkdir /app
+# Updating nodejs version
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
+
+RUN apt-get update -qq && \
+  apt-get install -y nodejs postgresql-client && \
+  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 WORKDIR /app
 
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-RUN bundle install
+# Install gem bundle
+COPY Gemfile /app/
+COPY Gemfile.lock /app/
 
+RUN bundle install --jobs 3 --deployment --without development test
+
+# Install the application
 COPY . /app
 
-# Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
-EXPOSE 3000
+# Generate version file if available
+RUN if [ -d .git ]; then git describe --always > VERSION; fi
 
-# Start the main process.
-CMD ["rails", "server", "-b", "0.0.0.0"]
+# Precompile assets
+RUN bundle exec rake assets:precompile RAILS_ENV=production SECRET_KEY_BASE=secret
+
+ENV RAILS_LOG_TO_STDOUT=true
+ENV RACK_ENV=production
+ENV RAILS_ENV=production
+EXPOSE 80
+
+# Add scripts
+COPY docker/database.yml /app/config/database.yml
+
+CMD ["puma", "-e", "production", "-b", "tcp://0.0.0.0:80"]
