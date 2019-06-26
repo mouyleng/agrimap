@@ -1,4 +1,3 @@
-
 .DS_Store
 
 # Ignore bundler config.
@@ -22,3 +21,12 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore environment variable
+.env
+
+# Ignore dummy database
+dump.rdb
+
+#Ignore test coverage
+coverage
