@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <span class="navbar-brand mb-0 h1">
+      <%= link_to 'Agrimap', root_path, class: 'brand' %>
+    </span>
+
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <% if user_signed_in? %>
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+              href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <%= current_user.email %>
+            </a>
+          <% else %>
+            <%= link_to "Login", new_user_session_path, :class => 'nav-link'  %>
+            <li class="nav-item">
+              <%= link_to "Sign up", new_user_registration_path, :class => 'nav-link'  %>
+            </li>
+          <% end %>
+          <div class="dropdown-menu">
+            <% if user_signed_in? && current_user.role=='super_admin' %>
+              <%= link_to 'Setting', manage_index_path, class: 'dropdown-item' %>
+            <% end %>
+            <%= link_to 'Change password', edit_user_registration_path,
+              class: 'dropdown-item' %>
+            <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
+              class: 'dropdown-item' %>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

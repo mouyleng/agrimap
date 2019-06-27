@@ -1,0 +1,30 @@
+<script>
+  $("input[type='checkbox']").forEach(function(node){
+    var $input   = $(node),
+        selector = $input.attr("id")
+    if (localStorage[selector]) {
+      $("#" + selector ).prop("checked", true)
+    }
+  })
+
+  $("input[type='checkbox']").on('change', function(e) {
+    var $input    = $(e.currentTarget),
+        selector  = $input.attr("id"),
+        isChecked = $input.is(':checked') === 'true'
+        nextState = !isChecked
+    localStorage[selector] = nextState
+    console.log($input.attr("id") + " is checked? " + nextState)
+  });
+</script>
+
+<div class="container">
+  <p>Check the user to be admin</p>
+  <% @users.each do |user| %>
+    <div class="checkbox">
+      <label for="user_role">
+        <input name="user[role]" type="hidden" value="">
+        <input id="user_role" name="user[role]" type="checkbox" value="admin"> <%= user.email %>
+      </label>
+    </div>
+  <% end %>
+</div>
