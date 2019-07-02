@@ -6,6 +6,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
         && apt-get install -y nodejs
 
 RUN npm install -g yarn
+RUN yarn install
 
 RUN mkdir /app
 WORKDIR /app
