@@ -10,6 +10,12 @@
 !/log/.keep
 !/tmp/.keep
 
+config/application.yml
+
+# dotenv
+# TODO Comment out this rule if environment variables can be committed
+.env
+
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep

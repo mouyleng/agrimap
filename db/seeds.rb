@@ -16,3 +16,9 @@ user.password = 'password'
 user.password_confirmation = 'password'
 user.role='super_admin'
 user.save
+
+user = User.find_or_initialize_by(email: 'mouyleng@instedd.org')
+user.password = 'mouyleng123'
+user.password_confirmation = 'mouyleng123'
+user.role='super_admin'
+user.save
