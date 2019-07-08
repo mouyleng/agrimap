@@ -6,7 +6,6 @@ interface Thing {
 const initialState: Thing[] = [];
 
 export function thingsReducer(state = initialState, action): Thing[] {
-  console.log("thingsReducer type:", action.type);
   switch (action.type) {
     case "GET_THINGS_SUCCESS":
       return action.json.things;

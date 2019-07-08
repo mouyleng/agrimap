@@ -2,7 +2,7 @@ import React from "react"
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { authenticate } from '../../actions/auth';
+import { authenticate,authAutoSignIn } from '../../actions/auth';
 import configureStore from '../../configureStore';
 
 const store = configureStore();
@@ -13,12 +13,17 @@ class Login extends React.Component {
     super();
   }
 
+  componentDidMount() {
+    this.props.onAutoSignIn();
+  }
+
   handleSubmit(){
     let user = {
       email: this.email.value,
       password: this.password.value,
     }
     this.props.onTryAuth(user);
+    console.log('this.props.user : ', this.props.auth);
   }
 
   render(){
@@ -49,7 +54,8 @@ const structuredSelector = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTryAuth: (authData) => dispatch(authenticate(authData))
+    onTryAuth: (authData) => dispatch(authenticate(authData)),
+    onAutoSignIn: () => dispatch(authAutoSignIn())
   };
 };
 

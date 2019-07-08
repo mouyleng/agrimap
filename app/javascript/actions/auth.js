@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+import { push } from 'connected-react-router';
 
 const authRequest = () => {
   return {
@@ -57,19 +58,27 @@ export const authenticate = (user) => {
     })
       .then(res => res.json())
       .then((response) => {
-        console.log('response : ', response);
+        console.log('response : ', response)
         const token = response.auth_token;
         localStorage.setItem('token', token);
-      })
-      .then((user) => {
-        console.log(user)
-        dispatch(authSuccess(user, localStorage.token))
+        dispatch(authSuccess(user, token))
+        dispatch(push('/home'))
       })
       .catch((errors) => {
         dispatch(authFailure(errors))
         localStorage.clear()
       })
   }
+}
+
+export const authAutoSignIn = () => {
+  return dispatch => {
+    let token = localStorage.getItem('token');
+    console.log('authAutoSignIn:  ', token)
+    if(token != 'undefined'){
+      dispatch(push('/home'))
+    }
+  };
 }
 
 export const logout = () => {
