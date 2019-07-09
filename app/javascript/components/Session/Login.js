@@ -4,9 +4,20 @@ import { createStructuredSelector } from 'reselect';
 
 import { authenticate,authAutoSignIn } from '../../actions/auth';
 import configureStore from '../../configureStore';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
 
 const store = configureStore();
-import { Container, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import {
+  Container,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText,
+  FormFeedback } from 'reactstrap';
+
 
 class Login extends React.Component {
   constructor(){
@@ -17,31 +28,56 @@ class Login extends React.Component {
     this.props.onAutoSignIn();
   }
 
-  handleSubmit(){
+  handleSubmit(values){
     let user = {
-      email: this.email.value,
-      password: this.password.value,
+      email: values.email,
+      password: values.password,
     }
     this.props.onTryAuth(user);
-    console.log('this.props.user : ', this.props.auth);
   }
 
   render(){
+    const customInputForm = ({field, form: {touched, errors}, ...props}) => (
+      <div>
+        <Input
+          invalid={!!(touched[field.name] && errors[field.name])}
+          {...field}
+          {...props} />
+        {touched[field.name] && errors[field.name] && <FormFeedback>{errors[field.name]}</FormFeedback>}
+      </div>
+    );
+
+    const loginSchema = Yup.object().shape({
+      password: Yup.string()
+        .required("Required"),
+      email: Yup.string()
+        .email("Invalid email")
+        .required("Required")
+    });
     return (
       <React.Fragment>
         <Container>
           <h2>Login</h2>
-          <Form>
-            <FormGroup>
-              <Label for="email">Email</Label>
-              <Input type="email" name="email" id="email" innerRef={(ref) => {this.email=ref}} placeholder="Email" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="password">Password</Label>
-              <Input type="password" name="password" id="password" innerRef={(ref) => {this.password=ref}} placeholder="Password" />
-            </FormGroup>
-            <Button onClick={()=> this.handleSubmit()}>Submit</Button>
-          </Form>
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            onSubmit={(values) => {
+              this.handleSubmit(values);
+            }}
+            validationSchema={loginSchema}
+            render={props => (
+              <Form onSubmit={props.handleSubmit}>
+                <FormGroup>
+                  <Label for="email">Email</Label>
+                  <Field name="email" type={'email'} component={customInputForm}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="password">Password</Label>
+                    <Field name="password" type={'password'} component={customInputForm}/>
+                </FormGroup>
+                <Button type="submit">Submit</Button>
+              </Form>
+            )}
+          />
         </Container>
       </React.Fragment>
     )

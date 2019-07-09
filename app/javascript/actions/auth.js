@@ -75,7 +75,7 @@ export const authAutoSignIn = () => {
   return dispatch => {
     let token = localStorage.getItem('token');
     console.log('authAutoSignIn:  ', token)
-    if(token != 'undefined'){
+    if(token != 'undefined' && token){
       dispatch(push('/home'))
     }
   };
