@@ -83,7 +83,9 @@ export const authAutoSignIn = () => {
 
 export const logout = () => {
   return dispatch => {
+    console.log('logout : ');
     localStorage.clear();
+    dispatch(push('/'))
     return dispatch({
       type: types.LOGOUT
     });

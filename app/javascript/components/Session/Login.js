@@ -3,11 +3,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { authenticate,authAutoSignIn } from '../../actions/auth';
-import configureStore from '../../configureStore';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
-const store = configureStore();
 import {
   Container,
   Button,
